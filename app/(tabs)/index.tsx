@@ -1,14 +1,40 @@
-import { StyleSheet } from 'react-native';
-
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+import { Category } from "@/components/Category";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { useState } from "react";
+import { TodoCard } from "@/components/TodoCard";
 
 export default function TabOneScreen() {
+  const arr = [
+    { icon: <></>, text: "일상" },
+    { icon: <></>, text: "출근" },
+    { icon: <></>, text: "여행" },
+    { icon: <></>, text: "기타" },
+  ];
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+      <ScrollView
+        horizontal
+        contentContainerStyle={styles.categoryBox}
+        style={styles.displayContents}
+      >
+        {arr.map(({ icon, text }, i) => (
+          <Category
+            key={i}
+            text={text}
+            icon={icon}
+            selected={selectedCategory === text}
+            onPress={() => setSelectedCategory(text)}
+          />
+        ))}
+      </ScrollView>
+      <ScrollView
+        contentContainerStyle={{ rowGap: 8 }}
+        style={styles.todolistBox}
+      >
+        <TodoCard />
+      </ScrollView>
     </View>
   );
 }
@@ -16,16 +42,21 @@ export default function TabOneScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+  categoryBox: {
+    columnGap: 8,
+    alignItems: "center",
+    width: "100%",
+    padding: 8,
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+  todolistBox: {
+    flex: 1,
+    width: "100%",
+    paddingHorizontal: 20,
+  },
+  displayContents: {
+    display: "contents",
   },
 });

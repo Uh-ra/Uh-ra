@@ -23,14 +23,21 @@ export const Todo = ({
       onPress={onPress}
       style={[
         styles.todo,
-        isImportant ? styles.importantTodo : styles.normalTodo,
+        { backgroundColor: isImportant ? colors.red400 : colors.gray100 },
         checked &&
           (isImportant
             ? styles.importantTodoChecked
             : styles.normalTodoChecked),
       ]}
     >
-      <View style={styles.checkButton}>
+      <View
+        style={[
+          styles.checkButton,
+          isImportant && !checked
+            ? styles.importantTodoChecked
+            : styles.normalTodoNotChecked,
+        ]}
+      >
         {checked && <Check size={14} color="red600" />}
       </View>
       <Txt
@@ -47,7 +54,7 @@ export const Todo = ({
 const styles = StyleSheet.create({
   todo: {
     paddingHorizontal: 12,
-    paddingVertical: 10,
+    paddingVertical: 12,
     borderRadius: 8,
     flexDirection: "row",
     alignItems: "center",
@@ -55,7 +62,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   normalTodo: {
-    backgroundColor: colors.gray50,
+    backgroundColor: colors.gray100,
   },
   importantTodo: {
     backgroundColor: colors.red400,
@@ -63,17 +70,19 @@ const styles = StyleSheet.create({
   importantTodoChecked: {
     backgroundColor: colors.red100,
   },
+  normalTodoNotChecked: {
+    backgroundColor: colors.white,
+  },
   normalTodoChecked: {
-    backgroundColor: colors.gray50,
+    backgroundColor: colors.gray100,
   },
   checkedTodo: {
     opacity: 0.6,
   },
   checkButton: {
     borderRadius: 20,
-    backgroundColor: colors.white,
-    width: 20,
-    height: 20,
+    width: 24,
+    height: 24,
     justifyContent: "center",
     alignItems: "center",
   },

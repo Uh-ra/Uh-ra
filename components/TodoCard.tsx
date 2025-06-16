@@ -1,15 +1,21 @@
 import {
+  Modal,
+  Animated,
+  Easing,
   Pressable,
+  Dimensions,
+  View,
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  View,
 } from "react-native";
+import { useRef, useState } from "react";
+
 import { Txt } from "./Txt";
 import { Todo } from "./Todo";
-import { useState } from "react";
-import { Pin, Plus } from "@/assets/icons";
+import { Pin, Plus, Setting } from "@/assets/icons";
 import { colors } from "@/constants";
+import { AddTodoModal } from "./AddTodoModal";
 
 interface TodolistProps {
   text: string;
@@ -36,12 +42,38 @@ export const TodoCard = () => {
     );
   };
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const slideAnim = useRef(
+    new Animated.Value(Dimensions.get("window").height)
+  ).current;
+
+  const openModal = () => {
+    setIsModalVisible(true);
+    Animated.timing(slideAnim, {
+      toValue: 0,
+      duration: 300,
+      easing: Easing.out(Easing.ease),
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const closeModal = () => {
+    Animated.timing(slideAnim, {
+      toValue: Dimensions.get("window").height,
+      duration: 300,
+      easing: Easing.in(Easing.ease),
+      useNativeDriver: true,
+    }).start(() => {
+      setIsModalVisible(false);
+    });
+  };
+
   return (
     <View style={styles.container}>
       {/* 제목 */}
       <View style={styles.titleContainer}>
         <View style={styles.titleBox}>
-          <Txt type="semibold20">출근길에 챙겨야할것</Txt>
+          <Txt type="semibold20">출근할 때 필수템</Txt>
           <TouchableOpacity
             onPress={() => setIsPin(!isPin)}
             style={styles.pushpinButton}
@@ -49,19 +81,22 @@ export const TodoCard = () => {
             <Pin color="gray200" fill={isPin} />
           </TouchableOpacity>
         </View>
-        <Txt type="medium14" color="gray400">
-          어쩌고저쩌고
+        <Txt type="medium14" color="gray300">
+          매주 평일 오후 11:30
         </Txt>
       </View>
       {/* 투두리스트 */}
       <View style={styles.todolistContainer}>
-        <ScrollView contentContainerStyle={styles.todolistBox}>
-          <Pressable style={styles.addButton}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.todolistBox}
+        >
+          <TouchableOpacity style={styles.addButton}>
             <Plus size={22} color="gray200" />
             <Txt type="medium18" color="gray200">
               추가하기
             </Txt>
-          </Pressable>
+          </TouchableOpacity>
           {todolist.map(({ text, checked, type }, i) => (
             <Todo
               key={i}
@@ -74,9 +109,17 @@ export const TodoCard = () => {
         </ScrollView>
       </View>
       {/* 설정 */}
-      <Pressable style={styles.setTodoButton}>
-        <Txt>설정</Txt>
-      </Pressable>
+      <TouchableOpacity style={styles.setTodoButton} onPress={openModal}>
+        <Setting color="gray300" />
+        <Txt color="gray400" type="medium18">
+          설정
+        </Txt>
+      </TouchableOpacity>
+      <AddTodoModal
+        isModalVisible={isModalVisible}
+        closeModal={closeModal}
+        slideAnim={slideAnim}
+      />
     </View>
   );
 };
@@ -101,9 +144,7 @@ const styles = StyleSheet.create({
   },
   title: {},
   description: {},
-  pushpinButton: {
-    backgroundColor: "#f00",
-  },
+  pushpinButton: {},
   todolistBox: {
     rowGap: 8,
     paddingBottom: 24,
@@ -129,11 +170,9 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: "center",
     alignItems: "center",
-    borderTopColor: colors.gray50,
+    borderTopColor: colors.gray100,
     borderTopWidth: 1,
-  },
-  setTodoBox: {
-    width: "100%",
+    flexDirection: "row",
     gap: 8,
   },
 });

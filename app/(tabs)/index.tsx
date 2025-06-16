@@ -1,7 +1,9 @@
 import { Category } from "@/components/Category";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useState } from "react";
 import { TodoCard } from "@/components/TodoCard";
+import { colors } from "@/constants";
+import { Txt } from "@/components/Txt";
 
 export default function TabOneScreen() {
   const arr = [
@@ -14,6 +16,7 @@ export default function TabOneScreen() {
 
   return (
     <View style={styles.container}>
+      <Txt type="semibold20">이것저것어쩌고저저고</Txt>
       <ScrollView
         horizontal
         contentContainerStyle={styles.categoryBox}
@@ -42,8 +45,10 @@ export default function TabOneScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
     justifyContent: "center",
+    backgroundColor: colors.gray100,
+    paddingVertical: 20,
+    gap: 20,
   },
   categoryBox: {
     columnGap: 8,

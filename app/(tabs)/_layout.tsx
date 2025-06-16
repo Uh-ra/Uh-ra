@@ -14,12 +14,9 @@ function TabBarIcon(props: {
 export default function TabLayout() {
   return (
     <Tabs
-      screenOptions={
-        {
-          // Disable the static render of the header on web
-          // to prevent a hydration error in React Navigation v6.
-        }
-      }
+      screenOptions={{
+        headerShown: false,
+      }}
     >
       <Tabs.Screen
         name="index"

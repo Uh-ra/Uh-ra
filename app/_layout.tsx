@@ -42,9 +42,16 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <ThemeProvider value={DefaultTheme}>
-      <Stack>
+      <Stack
+        initialRouteName="Onboarding1"
+        screenOptions={{ headerShown: false }}
+      >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+        <Stack.Screen name="Onboarding1" />
+        <Stack.Screen name="Onboarding2" />
+        <Stack.Screen name="Onboarding3" />
+        <Stack.Screen name="Onboarding4" />
       </Stack>
     </ThemeProvider>
   );

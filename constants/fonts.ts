@@ -1,9 +1,19 @@
 import { StyleSheet } from "react-native";
 
 export const fonts = StyleSheet.create({
+  regular28: {
+    fontSize: 28,
+    lineHeight: 32,
+    fontFamily: "Pretendard-Regular",
+  },
   semibold20: {
     fontSize: 20,
     lineHeight: 24,
+    fontFamily: "Pretendard-Semibold",
+  },
+  semibold18: {
+    fontSize: 18,
+    lineHeight: 20,
     fontFamily: "Pretendard-Semibold",
   },
   medium18: {
@@ -23,7 +33,7 @@ export const fonts = StyleSheet.create({
   },
   medium14: {
     fontSize: 14,
-    lineHeight: 16,
+    lineHeight: 20,
     fontFamily: "Pretendard-Medium",
   },
 });

@@ -5,4 +5,6 @@ export interface IconProps {
   color?: keyof typeof colors;
   fill?: boolean;
   onPress?: () => void;
+  selected?: boolean;
+  rotate?: "up" | "down" | "right" | "left";
 }

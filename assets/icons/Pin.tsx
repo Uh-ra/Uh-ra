@@ -10,7 +10,7 @@ export const Pin = ({
   return (
     <Svg width={size} height={size} fill="none" viewBox="0 0 20 20">
       <Path
-        fill={fill ? colors[color] : "transperant"}
+        fill={fill ? colors[color] : "transparent"}
         stroke={colors[color]}
         strokeLinecap="round"
         strokeLinejoin="round"

@@ -1,3 +1,3 @@
 export * from "./fonts";
-export * from "./folors";
+export * from "./colors";
 export * from "./list";

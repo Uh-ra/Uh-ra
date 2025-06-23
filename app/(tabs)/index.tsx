@@ -2,36 +2,55 @@ import { Category } from "@/components/Category";
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { useState } from "react";
 import { TodoCard } from "@/components/TodoCard";
-import { colors } from "@/constants";
+import { CategoryKey, category, colors } from "@/constants";
 import { Txt } from "@/components/Txt";
+import { useNavigation } from "expo-router";
+import { NavigationTypes } from "@/types";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import React from "react";
+import { Bell, Menu, More } from "@/assets/icons";
 
 export default function TabOneScreen() {
-  const arr = [
-    { icon: <></>, text: "일상" },
-    { icon: <></>, text: "출근" },
-    { icon: <></>, text: "여행" },
-    { icon: <></>, text: "기타" },
-  ];
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [pressed, setPressed] = useState<CategoryKey>("일상");
+
+  const navigation =
+    useNavigation<NativeStackNavigationProp<NavigationTypes>>();
 
   return (
     <View style={styles.container}>
-      <Txt type="semibold20">이것저것어쩌고저저고</Txt>
-      <ScrollView
-        horizontal
-        contentContainerStyle={styles.categoryBox}
-        style={styles.displayContents}
-      >
-        {arr.map(({ icon, text }, i) => (
-          <Category
-            key={i}
-            text={text}
-            icon={icon}
-            selected={selectedCategory === text}
-            onPress={() => setSelectedCategory(text)}
-          />
-        ))}
-      </ScrollView>
+      <View style={styles.topBar}>
+        <TouchableOpacity style={styles.topBarButton}>
+          <Bell fill color="gray400" />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.topBarButton}>
+          <Menu color="gray400" />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.categoryContainer}>
+        <View style={styles.categoryBox}>
+          {category.map(({ icon, name }, i) => (
+            <TouchableOpacity
+              key={i}
+              style={[
+                styles.section,
+                {
+                  backgroundColor:
+                    name == pressed ? colors.gray900 : colors.white,
+                },
+              ]}
+              onPress={() => setPressed(name)}
+            >
+              {React.createElement(icon, {
+                selected: name === pressed,
+              })}
+              <Txt color={name == pressed ? "white" : "gray400"}>{name}</Txt>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <TouchableOpacity style={styles.moreButton}>
+          <More color="gray400" />
+        </TouchableOpacity>
+      </View>
       <ScrollView
         contentContainerStyle={{ rowGap: 8 }}
         style={styles.todolistBox}
@@ -43,6 +62,23 @@ export default function TabOneScreen() {
 }
 
 const styles = StyleSheet.create({
+  topBar: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    gap: 4,
+  },
+  topBarButton: {
+    padding: 8,
+  },
+  categoryContainer: {
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    paddingHorizontal: 20,
+  },
   container: {
     flex: 1,
     justifyContent: "center",
@@ -50,18 +86,29 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     gap: 20,
   },
+  section: {
+    borderRadius: 100,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
   categoryBox: {
     columnGap: 8,
     alignItems: "center",
-    width: "100%",
-    padding: 8,
+    flexDirection: "row",
   },
   todolistBox: {
     flex: 1,
     width: "100%",
     paddingHorizontal: 20,
   },
-  displayContents: {
-    display: "contents",
+  moreButton: {
+    backgroundColor: colors.white,
+    borderRadius: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 8,
   },
 });

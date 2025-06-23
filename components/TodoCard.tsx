@@ -2,7 +2,6 @@ import {
   Modal,
   Animated,
   Easing,
-  Pressable,
   Dimensions,
   View,
   TouchableOpacity,
@@ -13,7 +12,7 @@ import { useRef, useState } from "react";
 
 import { Txt } from "./Txt";
 import { Todo } from "./Todo";
-import { Pin, Plus, Setting } from "@/assets/icons";
+import { Bell, Pin, Plus, Setting } from "@/assets/icons";
 import { colors } from "@/constants";
 import { AddTodoModal } from "./AddTodoModal";
 
@@ -70,30 +69,28 @@ export const TodoCard = () => {
 
   return (
     <View style={styles.container}>
-      {/* 제목 */}
-      <View style={styles.titleContainer}>
-        <View style={styles.titleBox}>
-          <Txt type="semibold20">출근할 때 필수템</Txt>
-          <TouchableOpacity
-            onPress={() => setIsPin(!isPin)}
-            style={styles.pushpinButton}
-          >
-            <Pin color="gray200" fill={isPin} />
-          </TouchableOpacity>
+      <View style={styles.titleBox}>
+        <View style={styles.title}>
+          <Txt type="semibold20">출근할 때 필수템</Txt>{" "}
+          <Txt type="medium14" color="gray400">
+            매주 평일 오후 11:30
+          </Txt>
         </View>
-        <Txt type="medium14" color="gray300">
-          매주 평일 오후 11:30
-        </Txt>
+        <TouchableOpacity
+          onPress={() => setIsPin(!isPin)}
+          style={styles.pushpinButton}
+        >
+          <Pin size={28} color={isPin ? "gray500" : "gray400"} fill={isPin} />
+        </TouchableOpacity>
       </View>
-      {/* 투두리스트 */}
       <View style={styles.todolistContainer}>
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.todolistBox}
         >
           <TouchableOpacity style={styles.addButton}>
-            <Plus size={22} color="gray200" />
-            <Txt type="medium18" color="gray200">
+            <Plus size={22} color="gray400" />
+            <Txt type="medium18" color="gray400">
               추가하기
             </Txt>
           </TouchableOpacity>
@@ -108,13 +105,16 @@ export const TodoCard = () => {
           ))}
         </ScrollView>
       </View>
-      {/* 설정 */}
-      <TouchableOpacity style={styles.setTodoButton} onPress={openModal}>
-        <Setting color="gray300" />
-        <Txt color="gray400" type="medium18">
-          설정
-        </Txt>
-      </TouchableOpacity>
+      <View style={styles.settingBox}>
+        <TouchableOpacity style={styles.setTodoButton} onPress={openModal}>
+          <Bell color="gray300" />
+          <Txt color="gray500">알림</Txt>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.setTodoButton} onPress={openModal}>
+          <Setting color="gray300" />
+          <Txt color="gray500">설정</Txt>
+        </TouchableOpacity>
+      </View>
       <AddTodoModal
         isModalVisible={isModalVisible}
         closeModal={closeModal}
@@ -127,52 +127,54 @@ export const TodoCard = () => {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    display: "flex",
-    borderRadius: 20,
+    borderRadius: 16,
     backgroundColor: "#fff",
-  },
-  titleContainer: {
-    width: "100%",
-    padding: 20,
-    gap: 8,
+    overflow: "hidden",
+    borderColor: colors.gray100,
+    borderWidth: 1,
   },
   titleBox: {
-    display: "flex",
+    flexDirection: "row",
     justifyContent: "space-between",
+    marginBottom: 6,
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    paddingBottom: 8,
+  },
+  settingBox: {
     flexDirection: "row",
     width: "100%",
   },
-  title: {},
-  description: {},
-  pushpinButton: {},
-  todolistBox: {
-    rowGap: 8,
-    paddingBottom: 24,
+  pushpinButton: {
+    padding: 4,
   },
   todolistContainer: {
+    paddingHorizontal: 16,
+    maxHeight: 300,
+  },
+  todolistBox: {
+    paddingBottom: 16,
     gap: 8,
-    paddingHorizontal: 20,
-    height: 300,
   },
   addButton: {
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderRadius: 8,
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
+    gap: 8,
+    padding: 12,
+    borderRadius: 8,
     alignSelf: "flex-start",
   },
-  divider: {
-    width: "80%",
-  },
   setTodoButton: {
-    padding: 20,
-    justifyContent: "center",
-    alignItems: "center",
+    paddingVertical: 20,
     borderTopColor: colors.gray100,
     borderTopWidth: 1,
+    alignItems: "center",
     flexDirection: "row",
+    justifyContent: "center",
+    gap: 6,
+    flex: 1,
+  },
+  title: {
     gap: 8,
   },
 });

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "@/types";
+import { NavigationTypes } from "@/types";
 import { CategoryKey, categoryItem, colors } from "@/constants";
 import { Txt } from "@/components/Txt";
 import { Arrow } from "@/assets/icons/Arrow";
@@ -12,7 +12,7 @@ import { useLocalSearchParams } from "expo-router";
 function Onboarding2() {
   const [pressed, setPressed] = useState<string[]>([]);
   const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+    useNavigation<NativeStackNavigationProp<NavigationTypes>>();
   const { selectedCategory }: { selectedCategory: CategoryKey } =
     useLocalSearchParams();
 

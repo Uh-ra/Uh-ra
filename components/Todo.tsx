@@ -1,6 +1,6 @@
 import { TouchableOpacity, StyleSheet, View } from "react-native";
 import { Txt } from "./Txt";
-import { Check } from "@/assets/icons";
+import { Check, Check2 } from "@/assets/icons";
 import { colors } from "@/constants";
 
 interface TodoProps {
@@ -21,30 +21,41 @@ export const Todo = ({
   return (
     <TouchableOpacity
       onPress={onPress}
+      activeOpacity={0.85}
       style={[
         styles.todo,
-        { backgroundColor: isImportant ? colors.red400 : colors.gray100 },
-        checked &&
-          (isImportant
-            ? styles.importantTodoChecked
-            : styles.normalTodoChecked),
+        {
+          backgroundColor: isImportant
+            ? checked
+              ? colors.red100
+              : colors.red300
+            : checked
+            ? colors.gray100
+            : colors.gray100,
+        },
       ]}
     >
       <View
         style={[
           styles.checkButton,
-          isImportant && !checked
-            ? styles.importantTodoChecked
-            : styles.normalTodoNotChecked,
+          {
+            backgroundColor: isImportant
+              ? checked
+                ? colors.white
+                : colors.red200
+              : checked
+              ? colors.gray50
+              : colors.white,
+          },
         ]}
       >
-        {checked && <Check size={14} color="red600" />}
+        {checked ? (
+          <Check size={20} color="red500" />
+        ) : (
+          <Check2 size={24} color={isImportant ? "red300" : "gray100"} />
+        )}
       </View>
-      <Txt
-        type="medium18"
-        color={checked ? (isImportant ? "gray500" : "gray400") : "black"}
-        style={checked && styles.checkedTodo}
-      >
+      <Txt type="medium18" color="black" style={[checked && { opacity: 0.2 }]}>
         {text}
       </Txt>
     </TouchableOpacity>
@@ -53,36 +64,18 @@ export const Todo = ({
 
 const styles = StyleSheet.create({
   todo: {
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    borderRadius: 8,
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
+    gap: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 8,
     alignSelf: "flex-start",
   },
-  normalTodo: {
-    backgroundColor: colors.gray100,
-  },
-  importantTodo: {
-    backgroundColor: colors.red400,
-  },
-  importantTodoChecked: {
-    backgroundColor: colors.red100,
-  },
-  normalTodoNotChecked: {
-    backgroundColor: colors.white,
-  },
-  normalTodoChecked: {
-    backgroundColor: colors.gray100,
-  },
-  checkedTodo: {
-    opacity: 0.6,
-  },
   checkButton: {
-    borderRadius: 20,
-    width: 24,
-    height: 24,
+    width: 28,
+    height: 28,
+    borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",
   },

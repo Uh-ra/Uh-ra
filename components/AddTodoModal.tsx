@@ -11,22 +11,43 @@ import React, { useState } from "react";
 import { Close } from "@/assets/icons";
 import { colors } from "@/constants";
 import { Dropdown } from "./Dropdown";
-import { days, noticeTime, repeatNotice } from "@/constants/time";
+import { setTimes, setTimesTitle } from "@/constants/time";
 
 interface ModalProps {
   isModalVisible: boolean;
   closeModal: any;
   slideAnim: any;
 }
+type DropdownKey = keyof typeof setTimes;
 
 export const AddTodoModal = ({
   isModalVisible,
   closeModal,
   slideAnim,
 }: ModalProps) => {
+  const [selectedDropdownKey, setSelectedDropdownKey] = useState<any>(null);
+
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+
+  const toggleSelect = (item: string) => {
+    setSelectedItems((prev) =>
+      prev.includes(item) ? prev.filter((v) => v !== item) : [...prev, item]
+    );
+  };
+
+  const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  const [selectedTime, setSelectedTime] = useState({
+    ampm: "",
+    hour: "",
+    minute: "",
+  });
+
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isByDay, setIsByDay] = useState<boolean>(true);
   const [isToggled, setIsToggled] = useState(false);
+  const handleDropdownPress = (key: string) => {
+    setSelectedDropdownKey((prev) => (prev === key ? null : key));
+  };
 
   return (
     <Modal
@@ -44,23 +65,23 @@ export const AddTodoModal = ({
       >
         <View style={styles.modalTitleBox}>
           <TouchableOpacity onPress={closeModal}>
-            <Close color="gray200" />
+            <Close color="gray300" />
           </TouchableOpacity>
-          <Txt type="semibold18">설정 모달</Txt>
+          <Txt type="semibold18">알림 설정</Txt>
           <TouchableOpacity>
-            <Txt type="semibold18" color="red600">
+            <Txt type="semibold16" color="gray500">
               완료
             </Txt>
           </TouchableOpacity>
         </View>
         <View style={styles.todoNotification}>
-          <Txt type="semibold16" color="gray500">
+          <Txt type="semibold16" color="gray600">
             알림
           </Txt>
-          <Pressable
+          <TouchableOpacity
             style={[
               styles.toggleBox,
-              { backgroundColor: isToggled ? colors.red400 : colors.gray100 },
+              { backgroundColor: isToggled ? colors.red400 : colors.gray200 },
             ]}
             onPress={() => setIsToggled(!isToggled)}
           >
@@ -68,13 +89,11 @@ export const AddTodoModal = ({
               style={[
                 styles.toggleCircle,
                 {
-                  transform: [
-                    { translateX: isToggled ? 24 : 0 }, // 위치 이동
-                  ],
+                  transform: [{ translateX: isToggled ? 28 : 0 }],
                 },
               ]}
             />
-          </Pressable>
+          </TouchableOpacity>
         </View>
         <View style={styles.setDayToggleBox}>
           <TouchableOpacity
@@ -101,35 +120,109 @@ export const AddTodoModal = ({
           </TouchableOpacity>
         </View>
         <View style={{ gap: 8 }}>
-          {/* 평일/오전8:00 클릭 시 디테일 열기 */}
-          <TouchableOpacity onPress={() => setIsDetailOpen((prev) => !prev)}>
-            <View style={styles.setDayDropdownBox}>
-              <Dropdown text="평일" select={days.day} />
-              <Dropdown text="오전 8:00" select={[]} />
-            </View>
-          </TouchableOpacity>
-
-          {/* 디테일 펼침 영역 */}
-          {isDetailOpen && (
-            <View style={styles.detailContainer}>
-              <Txt type="medium14" color="gray600">
-                반복 설정
-              </Txt>
-              <View style={styles.setDayDropdownBox}>
-                <Dropdown text="매주" select={repeatNotice} />
-                <Dropdown text="10분 전에" select={noticeTime} />
-              </View>
-            </View>
-          )}
-
-          {/* 아래는 원래 있던 드롭다운들 */}
           <View style={styles.setDayDropdownBox}>
-            <Dropdown text="정시" select={noticeTime} />
+            <Dropdown
+              title="평일"
+              onPress={() => handleDropdownPress("days")}
+              pressed={selectedDropdownKey === "days"}
+            />
+            <Dropdown
+              title="오전 8:00"
+              onPress={() => handleDropdownPress("time")}
+              pressed={selectedDropdownKey === "time"}
+            />
+          </View>
+
+          <View style={styles.setDayDropdownBox}>
+            <Dropdown
+              title="정시"
+              onPress={() => handleDropdownPress("noticeTime")}
+              pressed={selectedDropdownKey === "noticeTime"}
+            />
             <Txt>에</Txt>
-            <Dropdown text="매주" select={repeatNotice} />
+            <Dropdown
+              title="매주"
+              onPress={() => handleDropdownPress("repeatNotice")}
+              pressed={selectedDropdownKey === "repeatNotice"}
+            />
             <Txt>챙겨드릴게요!</Txt>
           </View>
         </View>
+        {selectedDropdownKey && (
+          <View style={styles.selectDropdownBox}>
+            <Txt type="semibold16" style={styles.modalTitle}>
+              {selectedDropdownKey}
+            </Txt>
+
+            {selectedDropdownKey === "time" ? (
+              <>
+                {["ampm", "hour", "minute"].map((key) => {
+                  const items =
+                    setTimes.time[key as keyof typeof setTimes.time];
+                  return (
+                    <View key={key} style={styles.optionGrid}>
+                      {items.map((item) => (
+                        <TouchableOpacity
+                          key={item}
+                          style={[
+                            styles.optionItem,
+                            {
+                              backgroundColor: selectedItems.includes(item)
+                                ? colors.gray500
+                                : colors.gray100,
+                            },
+                          ]}
+                          onPress={() => toggleSelect(item)}
+                        >
+                          <Txt
+                            type="medium16"
+                            color={
+                              selectedItems.includes(item) ? "white" : "gray600"
+                            }
+                          >
+                            {item}
+                          </Txt>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  );
+                })}
+              </>
+            ) : (
+              <View style={styles.optionGrid}>
+                {setTimes[
+                  selectedDropdownKey as Exclude<DropdownKey, "time">
+                ].map((line) => (
+                  <View style={styles.option}>
+                    {line.map((item, i) => (
+                      <TouchableOpacity
+                        key={i}
+                        style={[
+                          styles.optionItem,
+                          {
+                            backgroundColor: selectedItems.includes(item)
+                              ? colors.gray500
+                              : colors.gray100,
+                          },
+                        ]}
+                        onPress={() => toggleSelect(item)}
+                      >
+                        <Txt
+                          type="medium16"
+                          color={
+                            selectedItems.includes(item) ? "white" : "gray600"
+                          }
+                        >
+                          {item}
+                        </Txt>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                ))}
+              </View>
+            )}
+          </View>
+        )}
       </Animated.View>
     </Modal>
   );
@@ -185,24 +278,82 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
+    paddingTop: 8,
   },
   todoNotification: {
     width: "100%",
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
+    paddingVertical: 8,
   },
   toggleBox: {
-    width: 48,
-    height: 24,
+    width: 56,
+    height: 28,
     borderRadius: 100,
     padding: 2,
     justifyContent: "center",
   },
   toggleCircle: {
-    width: 20,
-    height: 20,
+    width: 24,
+    height: 24,
     borderRadius: 100,
     backgroundColor: "#fff",
+  },
+  dropdownBox: {
+    backgroundColor: colors.gray100,
+    paddingVertical: 10,
+    paddingLeft: 14,
+    paddingRight: 10,
+    borderRadius: 8,
+    alignSelf: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.3)",
+  },
+  modalContainer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: colors.white,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 24,
+    height: 200,
+    gap: 8,
+  },
+  modalTitle: {
+    marginBottom: 16,
+  },
+  optionItem: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  scrollView: {
+    rowGap: 12,
+    columnGap: 8,
+    flexDirection: "row",
+  },
+  optionGrid: {
+    gap: 12,
+    height: 100,
+  },
+  option: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  selectDropdownBox: {
+    paddingVertical: 20,
+    borderTopWidth: 1,
+    borderTopColor: colors.gray100,
   },
 });

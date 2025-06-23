@@ -2,59 +2,38 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  FlatList,
   Pressable,
+  Modal,
+  FlatList,
 } from "react-native";
 import { Txt } from "./Txt";
-import { Arrow } from "@/assets/icons/Arrow";
 import { colors } from "@/constants";
-import { useState } from "react";
+import { Arrow2 } from "@/assets/icons";
 
 interface DropdownProps {
-  text: string;
-  select: string[];
+  title: string;
+  pressed?: boolean;
+  onPress?: () => void;
 }
 
-export const Dropdown = ({ text, select }: DropdownProps) => {
-  const [showOptions, setShowOptions] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(text);
-
-  const handleSelect = (item: string) => {
-    setSelectedItem(item);
-    setShowOptions(false);
-  };
-
+export const Dropdown = ({ title, pressed, onPress }: DropdownProps) => {
   return (
-    <View style={styles.wrapper}>
-      <TouchableOpacity
-        onPress={() => setShowOptions((prev) => !prev)}
-        style={styles.dropdownBox}
-      >
-        <Txt type="medium16" color="gray900">
-          {selectedItem}
-        </Txt>
-        <Arrow color="gray200" rotate={showOptions ? "up" : "down"} />
-      </TouchableOpacity>
-
-      {showOptions && (
-        <View>
-          {select.map((item) => (
-            <Pressable key={item} onPress={() => handleSelect(item)}>
-              <Txt color={selectedItem === item ? "white" : "gray700"}>
-                {item}
-              </Txt>
-            </Pressable>
-          ))}
-        </View>
-      )}
-    </View>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[
+        styles.dropdownBox,
+        { backgroundColor: pressed ? colors.gray900 : colors.gray100 },
+      ]}
+    >
+      <Txt type="medium16" color={pressed ? "white" : "gray900"}>
+        {title}
+      </Txt>
+      <Arrow2 color="gray400" rotate={pressed ? "up" : "down"} />
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  wrapper: {
-    position: "relative",
-  },
   dropdownBox: {
     backgroundColor: colors.gray100,
     paddingVertical: 10,
@@ -65,5 +44,42 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.3)",
+  },
+  modalContainer: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: colors.white,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingHorizontal: 20,
+    paddingVertical: 24,
+    height: 200,
+    gap: 8,
+  },
+  modalTitle: {
+    marginBottom: 16,
+  },
+  optionItem: {
+    padding: 14,
+    borderRadius: 8,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  scrollView: {
+    rowGap: 12,
+    columnGap: 8,
+    flexDirection: "row",
+  },
+  optionGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
   },
 });

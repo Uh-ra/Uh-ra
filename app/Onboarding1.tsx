@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "@/types"; // 경로는 네가 저장한 위치로 맞춰줘
+import { NavigationTypes } from "@/types"; // 경로는 네가 저장한 위치로 맞춰줘
 import { CategoryKey, category, colors } from "@/constants";
 import { Txt } from "@/components/Txt";
 import { Arrow } from "@/assets/icons/Arrow";
@@ -11,7 +11,7 @@ import { Button } from "@/components/Button";
 function Onboarding1() {
   const [pressed, setPressed] = useState<CategoryKey>("일상");
   const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+    useNavigation<NativeStackNavigationProp<NavigationTypes>>();
 
   return (
     <View style={styles.container}>

@@ -3,3 +3,8 @@ export * from "./Pin";
 export * from "./Plus";
 export * from "./Setting";
 export * from "./Close";
+export * from "./Check2";
+export * from "./More";
+export * from "./Bell";
+export * from "./Menu";
+export * from "./Arrow2";

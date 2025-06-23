@@ -16,20 +16,18 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
+        title: "",
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: "메인",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => <Link href="/modal" asChild></Link>,
         }}
       />
       <Tabs.Screen
         name="two"
         options={{
-          title: "통계",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
